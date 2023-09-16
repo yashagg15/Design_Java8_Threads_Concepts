@@ -69,6 +69,11 @@ public class StreamFunctions {
         public int hashCode() {
             return Objects.hash(name);
         }
+
+        @Override
+        public String toString(){
+            return "Emplyee name"+getName();
+        }
     }
     public static void main(String[] args) {
 
@@ -89,6 +94,7 @@ public class StreamFunctions {
         fm.stream().flatMap(subLi->subLi.stream()).forEach(e-> System.out.print(e+" "));
         System.out.println(" ");
 
+        fm.stream().flatMap(e->e.stream()).collect(Collectors.toList());
 
         //2. reduce in stream a terminal ops. It minimises a list to one single value on some condition like sum, min ,max
         List<Integer> red=new ArrayList<>();
@@ -134,19 +140,11 @@ public class StreamFunctions {
         //3.same min, max, sum like reduce (terminal ops but, it takes comparator unlike reduce which takes function )
 
         System.out.println("Min fn Result");
-        Optional<Integer> min=red.stream().min((a,b)->{
-            if(a<b)
-                return -1;
-            return 1;
-        });
+        Optional<Integer> min=red.stream().min((a,b)->a-b);
         System.out.println(min.get());
 
         System.out.println("max fn Result");
-        Optional<Integer> max=red.stream().max((a,b)->{
-            if(a<b)
-                return -1;
-            return 1;
-        });
+        Optional<Integer> max=red.stream().max((a,b)->a-b);
         System.out.println(max.get());
 
         // 4. sum using stream ...sum method
@@ -201,11 +199,7 @@ public class StreamFunctions {
 
         //finding out city wise max salary
         Map<String,Optional<Employee>> maxSal=employeeList.stream().collect(
-                groupingBy(Employee::getCity,maxBy((Employee a,Employee b)->{
-                    if(a.getSalary()>b.getSalary())
-                        return 1;
-                    return -1;
-                })));
+                groupingBy(Employee::getCity,maxBy((Employee a,Employee b)->a.getSalary()-b.getSalary())));
 
         System.out.println("max salary by city using groupingBy in Collectors class fn Result");
         maxSal.entrySet().forEach(e-> System.out.println(e.getKey()+" "+e.getValue().get().getName()));
@@ -241,6 +235,16 @@ public class StreamFunctions {
         //allmatch a terminal ops if all of the element in a list matches -3561 it returns true
         System.out.println("allMatch fn Result");
         System.out.println(list.stream().allMatch(e->e<53));
+
+
+        List<Integer> a=new ArrayList<>();
+        a.add(23);
+        a.add(43);
+        a.add(1);
+        a.add(67);
+        System.out.println("Finalll");
+
+
 
 
     }
